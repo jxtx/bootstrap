@@ -23,6 +23,16 @@
 
   "use strict"; // jshint ;_;
 
+  // Add a special event that is called when an element is destroyed
+  (function($){
+    jQuery.event.special.destroyed = {
+      remove: function(o) {
+        if (o.handler) {
+          o.handler()
+        }
+      }
+    }
+  })(jQuery)
 
  /* TOOLTIP PUBLIC CLASS DEFINITION
   * =============================== */
@@ -50,6 +60,9 @@
         this.$element.on(eventIn, this.options.selector, $.proxy(this.enter, this))
         this.$element.on(eventOut, this.options.selector, $.proxy(this.leave, this))
       }
+
+      // Make sure tooltip is hidden when element is destroyed
+      this.$element.on( 'destroyed', $.proxy( this.hide, this ) ;
 
       this.options.selector ?
         (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
